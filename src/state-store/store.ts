@@ -7,23 +7,30 @@ import {
     OnEdgesChange,
     applyNodeChanges,
     applyEdgeChanges,
+    XYPosition,
 } from 'reactflow';
-import { create } from 'zustand';
+import create from 'zustand';
+import { nanoid } from 'nanoid/non-secure';
+
+import { NodeData } from '@/components/mind-map-node';
 
 export type RFState = {
-    nodes: Node[];
+    nodes: Node<NodeData>[];
     edges: Edge[];
     onNodesChange: OnNodesChange;
     onEdgesChange: OnEdgesChange;
+    updateNodeLabel: (nodeId: string, label: string) => void;
+    addChildNode: (parentNode: Node, position: XYPosition) => void;
 };
 
 const useStore = create<RFState>((set, get) => ({
     nodes: [
         {
             id: 'root',
-            type: 'mindmap',
+            type: 'mindMap',
             data: { label: 'React Flow Mind Map' },
             position: { x: 0, y: 0 },
+            dragHandle: '.dragHandle',
         },
     ],
     edges: [],
@@ -37,6 +44,40 @@ const useStore = create<RFState>((set, get) => ({
             edges: applyEdgeChanges(changes, get().edges),
         });
     },
+    updateNodeLabel: (nodeId: string, label: string) => {
+        set({
+            nodes: get().nodes.map((node) => {
+                if (node.id === nodeId) {
+                    // it's important to create a new object here, to inform React Flow about the changes
+                    node.data = { ...node.data, label };
+                }
+
+                return node;
+            }),
+        });
+    },
+    addChildNode: (parentNode: Node, position: XYPosition) => {
+        const newNode = {
+            id: nanoid(),
+            type: 'mindMap',
+            data: { label: 'New Node' },
+            position,
+            dragHandle: '.dragHandle',
+            parentNode: parentNode.id,
+        };
+
+        const newEdge = {
+            id: nanoid(),
+            source: parentNode.id,
+            target: newNode.id,
+        };
+
+        set({
+            nodes: [...get().nodes, newNode],
+            edges: [...get().edges, newEdge],
+        });
+    },
 }));
+
 
 export default useStore;

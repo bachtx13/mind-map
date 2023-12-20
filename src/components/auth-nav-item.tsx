@@ -1,6 +1,5 @@
 "use client";
 import {useAuth, UserButton} from "@clerk/nextjs";
-import {Button} from "@nextui-org/button";
 import {useRouter} from "next/navigation";
 
 const AuthNavItem = () => {
@@ -11,8 +10,8 @@ const AuthNavItem = () => {
     const router = useRouter();
     if (!isLoaded || !userId) {
         return <>
-            <Button onClick={() => router.push("/auth/sign-in")}>Sign In</Button>
-            <Button onClick={() => router.push("/auth/sign-up")}>Sign Up</Button>
+            <button onClick={() => router.push("/auth/sign-in")}>Sign In</button>
+            <button onClick={() => router.push("/auth/sign-up")}>Sign Up</button>
         </>;
     }
 
