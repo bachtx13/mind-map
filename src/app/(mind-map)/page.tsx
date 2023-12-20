@@ -1,19 +1,20 @@
 'use client'
-import { useCallback, useRef } from 'react';
+import {useCallback, useRef} from 'react';
 import ReactFlow, {
-    ConnectionLineType,
-    NodeOrigin,
+    Background,
+    BackgroundVariant,
+    Controls, MiniMap,
     Node,
+    NodeOrigin,
     OnConnectEnd,
     OnConnectStart,
+    Panel,
     useReactFlow,
     useStoreApi,
-    Controls,
-    Panel,
 } from 'reactflow';
 import shallow from 'zustand/shallow';
 
-import useStore, { RFState } from '@/state-store/store';
+import useStore, {RFState} from '@/state-store/store';
 
 // we need to import the React Flow styles to make it work
 import 'reactflow/dist/style.css';
@@ -38,8 +39,8 @@ const edgeTypes = {
 
 const nodeOrigin: NodeOrigin = [0.5, 0.5];
 
-const connectionLineStyle = { stroke: '#F6AD55', strokeWidth: 3 };
-const defaultEdgeOptions = { style: connectionLineStyle, type: 'mindmap' };
+const connectionLineStyle = { stroke: '#2ecc71', strokeWidth: 1 };
+const defaultEdgeOptions = { style: connectionLineStyle, type: 'mindMap' };
 
 function Flow() {
     const store = useStoreApi();
@@ -119,13 +120,15 @@ function Flow() {
             nodeOrigin={nodeOrigin}
             defaultEdgeOptions={defaultEdgeOptions}
             connectionLineStyle={connectionLineStyle}
-            connectionLineType={ConnectionLineType.Straight}
             fitView
         >
             <Controls showInteractive={false} />
             <Panel position="top-left" className="header">
                 React Flow Mind Map
             </Panel>
+            <Background color="#ccc" variant={BackgroundVariant.Lines} />
+            <MiniMap nodeStrokeWidth={3} />
+
         </ReactFlow>
     );
 }
